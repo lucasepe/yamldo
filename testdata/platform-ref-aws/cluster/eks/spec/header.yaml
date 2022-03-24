@@ -1,0 +1,4 @@
+writeConnectionSecretsToNamespace: upbound-system
+  compositeTypeRef:
+    apiVersion: aws.platformref.crossplane.io/v1alpha1
+    kind: EKS

@@ -1,0 +1,30 @@
+- base:
+    apiVersion: iam.aws.crossplane.io/v1beta1
+    kind: RolePolicyAttachment
+    spec:
+      forProvider:
+        policyArn: arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        roleNameSelector:
+          matchControllerRef: true
+          matchLabels:
+            role: nodegroup
+- base:
+    apiVersion: iam.aws.crossplane.io/v1beta1
+    kind: RolePolicyAttachment
+    spec:
+      forProvider:
+        policyArn: arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        roleNameSelector:
+          matchControllerRef: true
+          matchLabels:
+            role: nodegroup
+- base:
+    apiVersion: iam.aws.crossplane.io/v1beta1
+    kind: RolePolicyAttachment
+    spec:
+      forProvider:
+        policyArn: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        roleNameSelector:
+          matchControllerRef: true
+          matchLabels:
+            role: nodegroup

@@ -1,0 +1,4 @@
+metadata:
+  name: eks.aws.platformref.crossplane.io
+  labels:
+    provider: aws

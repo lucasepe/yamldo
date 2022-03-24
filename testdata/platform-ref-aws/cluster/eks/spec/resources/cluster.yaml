@@ -1,0 +1,36 @@
+- base:
+    apiVersion: eks.aws.crossplane.io/v1beta1
+    kind: Cluster
+    spec:
+      forProvider:
+        region: us-west-2
+        roleArnSelector:
+          matchControllerRef: true
+          matchLabels:
+            role: controlplane
+        resourcesVpcConfig:
+          endpointPrivateAccess: true
+          endpointPublicAccess: true
+        version: "1.21"
+  patches:
+    - fromFieldPath: metadata.annotations[crossplane.io/external-name]
+      toFieldPath: metadata.annotations[crossplane.io/external-name]
+    - fromFieldPath: metadata.uid
+      toFieldPath: spec.writeConnectionSecretToRef.name
+      transforms:
+        - type: string
+          string:
+            fmt: "%s-ekscluster"
+    - fromFieldPath: spec.writeConnectionSecretToRef.namespace
+      toFieldPath: spec.writeConnectionSecretToRef.namespace
+    - fromFieldPath: "spec.parameters.networkRef.id"
+      toFieldPath: spec.forProvider.resourcesVpcConfig.securityGroupIdSelector.matchLabels[networks.aws.platformref.crossplane.io/network-id]
+    - fromFieldPath: "spec.parameters.networkRef.id"
+      toFieldPath: spec.forProvider.resourcesVpcConfig.subnetIdSelector.matchLabels[networks.aws.platformref.crossplane.io/network-id]
+    - type: ToCompositeFieldPath
+      fromFieldPath: status.atProvider.identity.oidc.issuer
+      toFieldPath: status.eks.oidc
+      policy:
+        fromFieldPath: Optional
+  connectionDetails:
+    - fromConnectionSecretKey: kubeconfig
